@@ -14,12 +14,14 @@ jobs:
           node-version: '18'
 
       - name: Install LG Tools
-        run: npm install -g @lg-webos/ares-cli
+        run: npm install -g ares-cli
 
       - name: Build Package
         run: |
           mkdir -p output
-          ares-package . -o ./output || ares-package ./cee -o ./output
+          # البحث عن المجلد الذي يحتوي على appinfo.json وبناء التطبيق منه
+          APP_DIR=$(find . -name "appinfo.json" -exec dirname {} \; | head -n 1)
+          ares-package "$APP_DIR" -o ./output
           
       - name: Upload IPK
         uses: actions/upload-artifact@v4
