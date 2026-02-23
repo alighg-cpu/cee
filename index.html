@@ -2,16 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>LG App Redirect</title>
+    <title>Movies App</title>
     <style>
-        body { margin: 0; padding: 0; background-color: black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
+        body { margin: 0; padding: 0; background-color: black; }
+        iframe { border: none; width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
+    <iframe src="https://cee.buzz/home" allowfullscreen></iframe>
+
     <script>
-        // هذا السطر يقوم بتحويل الشاشة فوراً لموقعك
-        window.location.replace("https://cee.buzz/home");
+        // كود لمنع الشاشة من الإغلاق التلقائي أثناء المشاهدة
+        document.addEventListener('webOSLaunch', function() {
+            if (window.PalmSystem) {
+                PalmSystem.keepAlive(true);
+            }
+        }, false);
     </script>
-    <p>Loading...</p>
 </body>
 </html>
