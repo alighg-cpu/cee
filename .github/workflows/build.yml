@@ -4,21 +4,25 @@ on: [push, workflow_dispatch]
 jobs:
   build_job:
     runs-on: ubuntu-latest
+    # استخدام حاوية (Container) تحتوي على أدوات LG جاهزة
+    container:
+      image: node:18-bullseye
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
       - name: Build Application
         run: |
+          # تثبيت الأدوات داخل الحاوية بشكل نظيف
+          npm install -g @lg-webos/ares-cli --unsafe-perm
+          
           mkdir -p output
-          # استخدام الحزمة العامة المستقرة مباشرة
+          # البحث عن مكان ملف appinfo.json
           APP_DIR=$(find . -name "appinfo.json" -exec dirname {} \; | head -n 1)
-          npx ares-cli ares-package "$APP_DIR" -o ./output
+          
+          # تنفيذ عملية البناء
+          ares-package "$APP_DIR" -o ./output
           
       - name: Upload IPK
         uses: actions/upload-artifact@v4
