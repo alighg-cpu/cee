@@ -16,13 +16,10 @@ jobs:
       - name: Install LG Tools
         run: npm install -g @lg-webos/ares-cli
 
-      - name: Fix Directory and Build
+      - name: Build Package
         run: |
-          # هذا السطر يبحث عن مكان ملف appinfo ويقوم بالبناء من مكانه
-          APP_DIR=$(find . -name "appinfo.json" -exec dirname {} \;)
-          echo "Found appinfo in: $APP_DIR"
           mkdir -p output
-          ares-package "$APP_DIR" -o ./output
+          ares-package . -o ./output || ares-package ./cee -o ./output
           
       - name: Upload IPK
         uses: actions/upload-artifact@v4
