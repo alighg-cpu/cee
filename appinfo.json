@@ -1,11 +1,14 @@
 {
-    "id": "com.mywebsite.app",
+    "id": "com.alighg.app",
     "version": "1.0.0",
-    "vendor": "MyName",
+    "vendor": "Ali",
     "type": "web",
     "main": "index.html",
-    "title": "My LG App",
+    "title": "My Movies App",
     "icon": "icon.png",
     "uiRotation": "landscape",
-    "disableBackHistoryAPI": false
+    "requiredPermissions": [
+        "media.operation"
+    ],
+    "deeplinkingParams": "contentId"
 }
