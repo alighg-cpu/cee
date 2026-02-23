@@ -1,0 +1,11 @@
+{
+    "id": "com.mywebsite.app",
+    "version": "1.0.0",
+    "vendor": "MyName",
+    "type": "web",
+    "main": "index.html",
+    "title": "My LG App",
+    "icon": "icon.png",
+    "uiRotation": "landscape",
+    "disableBackHistoryAPI": false
+}
