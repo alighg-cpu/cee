@@ -1,15 +1,11 @@
 name: Build LG webOS App
-on: 
-  push:
-    branches:
-      - main
-  workflow_dispatch: # يتيح لك تشغيل البناء يدوياً
+on: [push, workflow_dispatch]
 
 jobs:
   build_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source Code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -17,17 +13,19 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install webOS CLI Tools
-        run: |
-          npm install -g @lg-webos/ares-cli
+      - name: Install LG Tools
+        run: npm install -g @lg-webos/ares-cli
 
-      - name: Package the Application
+      - name: Fix Directory and Build
         run: |
-          mkdir output
-          ares-package . -o ./output
-
-      - name: Upload Finished App
+          # هذا السطر يبحث عن مكان ملف appinfo ويقوم بالبناء من مكانه
+          APP_DIR=$(find . -name "appinfo.json" -exec dirname {} \;)
+          echo "Found appinfo in: $APP_DIR"
+          mkdir -p output
+          ares-package "$APP_DIR" -o ./output
+          
+      - name: Upload IPK
         uses: actions/upload-artifact@v4
         with:
-          name: LG-TV-App-Package
-          path: ./output/*.ipk
+          name: Movie-App-Package
+          path: output/*.ipk
