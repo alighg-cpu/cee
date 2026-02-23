@@ -16,9 +16,9 @@ jobs:
       - name: Build Application
         run: |
           mkdir -p output
-          # استخدام npx لتشغيل الأداة مباشرة دون الحاجة لتثبيت عالمي متعثر
+          # استخدام الحزمة العامة المستقرة مباشرة
           APP_DIR=$(find . -name "appinfo.json" -exec dirname {} \; | head -n 1)
-          npx @lg-webos/ares-cli ares-package "$APP_DIR" -o ./output
+          npx ares-cli ares-package "$APP_DIR" -o ./output
           
       - name: Upload IPK
         uses: actions/upload-artifact@v4
