@@ -13,19 +13,12 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install LG Tools
-        run: |
-          npm install -g ares-cli
-          # إضافة مسار الأدوات يدوياً للتأكد من التعرف عليها
-          echo "$(npm bin -g)" >> $GITHUB_PATH
-
-      - name: Build Package
+      - name: Build Application
         run: |
           mkdir -p output
-          # البحث عن مكان appinfo.json
+          # استخدام npx لتشغيل الأداة مباشرة دون الحاجة لتثبيت عالمي متعثر
           APP_DIR=$(find . -name "appinfo.json" -exec dirname {} \; | head -n 1)
-          # تشغيل الأمر باستخدام npx لضمان العثور عليه حتى لو لم يكن في المسار
-          npx ares-package "$APP_DIR" -o ./output
+          npx @lg-webos/ares-cli ares-package "$APP_DIR" -o ./output
           
       - name: Upload IPK
         uses: actions/upload-artifact@v4
