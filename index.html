@@ -1,23 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Movies App</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CEE TV</title>
     <style>
-        body { margin: 0; padding: 0; background-color: black; }
-        iframe { border: none; width: 100vw; height: 100vh; }
+        :root {
+            color-scheme: dark;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+        }
+
+        .status {
+            text-align: center;
+            max-width: 860px;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .hint {
+            margin-top: 1rem;
+            color: #a9a9a9;
+            font-size: 0.95rem;
+        }
+
+        .manual-open {
+            margin-top: 1.5rem;
+            background: #2d7cff;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .manual-open:focus {
+            outline: 3px solid #fff;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
-    <iframe src="https://cee.buzz/home" allowfullscreen></iframe>
+    <main class="status" role="status" aria-live="polite">
+        <h1>Opening CEE…</h1>
+        <p>If your internet is available, the app will open in a moment.</p>
+        <p class="hint">Press and hold the Back button on your LG remote to exit the app.</p>
+        <button class="manual-open" id="manualOpenBtn" type="button">Open now</button>
+    </main>
 
     <script>
-        // كود لمنع الشاشة من الإغلاق التلقائي أثناء المشاهدة
-        document.addEventListener('webOSLaunch', function() {
-            if (window.PalmSystem) {
-                PalmSystem.keepAlive(true);
+        (function () {
+            var baseUrl = 'https://cee.buzz/home';
+            var params = new URLSearchParams(window.location.search);
+            var contentId = params.get('contentId');
+            var launchUrl = contentId ? baseUrl + '?contentId=' + encodeURIComponent(contentId) : baseUrl;
+
+            function openSite() {
+                window.location.replace(launchUrl);
             }
-        }, false);
+
+            var manualOpenBtn = document.getElementById('manualOpenBtn');
+            manualOpenBtn.addEventListener('click', openSite);
+
+            // Ensure the app keeps running while media is being watched.
+            if (window.PalmSystem && typeof window.PalmSystem.keepAlive === 'function') {
+                window.PalmSystem.keepAlive(true);
+            }
+
+            // Support LG TV remote Back key.
+            document.addEventListener('keydown', function (event) {
+                if (event.keyCode === 461 && window.webOS && window.webOS.platformBack) {
+                    window.webOS.platformBack();
+                }
+            });
+
+            // Give webOS a short moment before redirecting.
+            setTimeout(openSite, 800);
+        })();
     </script>
 </body>
 </html>
